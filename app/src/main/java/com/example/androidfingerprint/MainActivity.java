@@ -41,8 +41,8 @@ import javax.crypto.SecretKey;
 /**
  * Main entry point for the sample, showing a backpack and "Purchase" button.
  */
-public class MainActivity extends Activity {
-
+public class MainActivity extends Activity
+{
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String DIALOG_FRAGMENT_TAG = "myFragment";
@@ -55,31 +55,42 @@ public class MainActivity extends Activity {
     private SharedPreferences mSharedPreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
+        try
+        {
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-        } catch (KeyStoreException e) {
+        }
+        catch (KeyStoreException e)
+        {
             throw new RuntimeException("Failed to get an instance of KeyStore", e);
         }
-        try {
+        try
+        {
             mKeyGenerator = KeyGenerator
                     .getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+        }
+        catch (NoSuchAlgorithmException | NoSuchProviderException e)
+        {
             throw new RuntimeException("Failed to get an instance of KeyGenerator", e);
         }
+
         Cipher defaultCipher;
         Cipher cipherNotInvalidated;
-        try {
+        try
+        {
             defaultCipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
-                    + KeyProperties.BLOCK_MODE_CBC + "/"
-                    + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+                                                       + KeyProperties.BLOCK_MODE_CBC + "/"
+                                                       + KeyProperties.ENCRYPTION_PADDING_PKCS7);
             cipherNotInvalidated = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/"
-                    + KeyProperties.BLOCK_MODE_CBC + "/"
-                    + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+                                                              + KeyProperties.BLOCK_MODE_CBC + "/"
+                                                              + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+        }
+        catch (NoSuchAlgorithmException | NoSuchPaddingException e)
+        {
             throw new RuntimeException("Failed to get an instance of Cipher", e);
         }
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -87,15 +98,17 @@ public class MainActivity extends Activity {
         KeyguardManager keyguardManager = getSystemService(KeyguardManager.class);
         FingerprintManager fingerprintManager = getSystemService(FingerprintManager.class);
         Button purchaseButton = (Button) findViewById(R.id.purchase_button);
-        Button purchaseButtonNotInvalidated = (Button) findViewById(
-                R.id.purchase_button_not_invalidated);
+        Button purchaseButtonNotInvalidated = (Button) findViewById(R.id.purchase_button_not_invalidated);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
             purchaseButtonNotInvalidated.setEnabled(true);
             purchaseButtonNotInvalidated.setOnClickListener(
                     new PurchaseButtonClickListener(cipherNotInvalidated,
-                            KEY_NAME_NOT_INVALIDATED));
-        } else {
+                                                    KEY_NAME_NOT_INVALIDATED));
+        }
+        else
+        {
             // Hide the purchase button which uses a non-invalidated key
             // if the app doesn't work on Android N preview
             purchaseButtonNotInvalidated.setVisibility(View.GONE);
@@ -103,12 +116,13 @@ public class MainActivity extends Activity {
                     .setVisibility(View.GONE);
         }
 
-        if (!keyguardManager.isKeyguardSecure()) {
+        if (!keyguardManager.isKeyguardSecure())
+        {
             // Show a message that the user hasn't set up a fingerprint or lock screen.
             Toast.makeText(this,
-                    "Secure lock screen hasn't set up.\n"
-                            + "Go to 'Settings -> Security -> Fingerprint' to set up a fingerprint",
-                    Toast.LENGTH_LONG).show();
+                           "Secure lock screen hasn't set up.\n"
+                                   + "Go to 'Settings -> Security -> Fingerprint' to set up a fingerprint",
+                           Toast.LENGTH_LONG).show();
             purchaseButton.setEnabled(false);
             purchaseButtonNotInvalidated.setEnabled(false);
             return;
@@ -118,12 +132,13 @@ public class MainActivity extends Activity {
         // See http://developer.android.com/reference/android/Manifest.permission.html#USE_FINGERPRINT
         // The line below prevents the false positive inspection from Android Studio
         // noinspection ResourceType
-        if (!fingerprintManager.hasEnrolledFingerprints()) {
+        if (!fingerprintManager.hasEnrolledFingerprints())
+        {
             purchaseButton.setEnabled(false);
             // This happens when no fingerprints are registered.
             Toast.makeText(this,
-                    "Go to 'Settings -> Security -> Fingerprint' and register at least one fingerprint",
-                    Toast.LENGTH_LONG).show();
+                           "Go to 'Settings -> Security -> Fingerprint' and register at least one fingerprint",
+                           Toast.LENGTH_LONG).show();
             return;
         }
         createKey(DEFAULT_KEY_NAME, true);
@@ -142,16 +157,22 @@ public class MainActivity extends Activity {
      * been disabled or reset after the key was generated, or if a fingerprint got enrolled after
      * the key was generated.
      */
-    private boolean initCipher(Cipher cipher, String keyName) {
-        try {
+    private boolean initCipher(Cipher cipher, String keyName)
+    {
+        try
+        {
             mKeyStore.load(null);
             SecretKey key = (SecretKey) mKeyStore.getKey(keyName, null);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return true;
-        } catch (KeyPermanentlyInvalidatedException e) {
+        }
+        catch (KeyPermanentlyInvalidatedException e)
+        {
             return false;
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException
-                | NoSuchAlgorithmException | InvalidKeyException e) {
+        }
+        catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException
+                | NoSuchAlgorithmException | InvalidKeyException e)
+        {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
@@ -160,25 +181,31 @@ public class MainActivity extends Activity {
      * Proceed the purchase operation
      *
      * @param withFingerprint {@code true} if the purchase was made by using a fingerprint
-     * @param cryptoObject the Crypto object
+     * @param cryptoObject    the Crypto object
      */
     public void onPurchased(boolean withFingerprint,
-            @Nullable FingerprintManager.CryptoObject cryptoObject) {
-        if (withFingerprint) {
+                            @Nullable FingerprintManager.CryptoObject cryptoObject)
+    {
+        if (withFingerprint)
+        {
             // If the user has authenticated with fingerprint, verify that using cryptography and
             // then show the confirmation message.
             assert cryptoObject != null;
             tryEncrypt(cryptoObject.getCipher());
-        } else {
+        }
+        else
+        {
             // Authentication happened with backup password. Just show the confirmation message.
             showConfirmation(null);
         }
     }
 
     // Show confirmation, if fingerprint was used show crypto information.
-    private void showConfirmation(byte[] encrypted) {
+    private void showConfirmation(byte[] encrypted)
+    {
         findViewById(R.id.confirmation_message).setVisibility(View.VISIBLE);
-        if (encrypted != null) {
+        if (encrypted != null)
+        {
             TextView v = (TextView) findViewById(R.id.encrypted_message);
             v.setVisibility(View.VISIBLE);
             v.setText(Base64.encodeToString(encrypted, 0 /* flags */));
@@ -189,11 +216,15 @@ public class MainActivity extends Activity {
      * Tries to encrypt some data with the generated key in {@link #createKey} which is
      * only works if the user has just authenticated via fingerprint.
      */
-    private void tryEncrypt(Cipher cipher) {
-        try {
+    private void tryEncrypt(Cipher cipher)
+    {
+        try
+        {
             byte[] encrypted = cipher.doFinal(SECRET_MESSAGE.getBytes());
             showConfirmation(encrypted);
-        } catch (BadPaddingException | IllegalBlockSizeException e) {
+        }
+        catch (BadPaddingException | IllegalBlockSizeException e)
+        {
             Toast.makeText(this, "Failed to encrypt the data with the generated key. "
                     + "Retry the purchase", Toast.LENGTH_LONG).show();
             Log.e(TAG, "Failed to encrypt the data with the generated key." + e.getMessage());
@@ -204,7 +235,7 @@ public class MainActivity extends Activity {
      * Creates a symmetric key in the Android Key Store which can only be used after the user has
      * authenticated with fingerprint.
      *
-     * @param keyName the name of the key to be created
+     * @param keyName                          the name of the key to be created
      * @param invalidatedByBiometricEnrollment if {@code false} is passed, the created key will not
      *                                         be invalidated even if a new fingerprint is enrolled.
      *                                         The default value is {@code true}, so passing
@@ -212,20 +243,21 @@ public class MainActivity extends Activity {
      *                                         (the key will be invalidated if a new fingerprint is
      *                                         enrolled.). Note that this parameter is only valid if
      *                                         the app works on Android N developer preview.
-     *
      */
-    public void createKey(String keyName, boolean invalidatedByBiometricEnrollment) {
+    public void createKey(String keyName, boolean invalidatedByBiometricEnrollment)
+    {
         // The enrolling flow for fingerprint. This is where you ask the user to set up fingerprint
         // for your flow. Use of keys is necessary if you need to know if the set of
         // enrolled fingerprints has changed.
-        try {
+        try
+        {
             mKeyStore.load(null);
             // Set the alias of the entry in Android KeyStore where the key will appear
             // and the constrains (purposes) in the constructor of the Builder
 
             KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(keyName,
-                    KeyProperties.PURPOSE_ENCRYPT |
-                            KeyProperties.PURPOSE_DECRYPT)
+                                                                                  KeyProperties.PURPOSE_ENCRYPT |
+                                                                                          KeyProperties.PURPOSE_DECRYPT)
                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     // Require the user to authenticate with a fingerprint to authorize every use
                     // of the key
@@ -237,53 +269,64 @@ public class MainActivity extends Activity {
             // visible on API level +24.
             // Ideally there should be a compat library for KeyGenParameterSpec.Builder but
             // which isn't available yet.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
                 builder.setInvalidatedByBiometricEnrollment(invalidatedByBiometricEnrollment);
             }
             mKeyGenerator.init(builder.build());
             mKeyGenerator.generateKey();
-        } catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException
-                | CertificateException | IOException e) {
+        }
+        catch (NoSuchAlgorithmException | InvalidAlgorithmParameterException
+                | CertificateException | IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    private class PurchaseButtonClickListener implements View.OnClickListener {
-
+    private class PurchaseButtonClickListener implements View.OnClickListener
+    {
         Cipher mCipher;
         String mKeyName;
 
-        PurchaseButtonClickListener(Cipher cipher, String keyName) {
+        public PurchaseButtonClickListener(Cipher cipher, String keyName)
+        {
             mCipher = cipher;
             mKeyName = keyName;
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(View view)
+        {
             findViewById(R.id.confirmation_message).setVisibility(View.GONE);
             findViewById(R.id.encrypted_message).setVisibility(View.GONE);
 
             // Set up the crypto object for later. The object will be authenticated by use
             // of the fingerprint.
-            if (initCipher(mCipher, mKeyName)) {
+            if (initCipher(mCipher, mKeyName))
+            {
 
                 // Show the fingerprint dialog. The user has the option to use the fingerprint with
                 // crypto, or you can fall back to using a server-side verified password.
@@ -292,16 +335,21 @@ public class MainActivity extends Activity {
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
                 boolean useFingerprintPreference = mSharedPreferences
                         .getBoolean(getString(R.string.use_fingerprint_to_authenticate_key),
-                                true);
-                if (useFingerprintPreference) {
+                                    true);
+                if (useFingerprintPreference)
+                {
                     fragment.setStage(
                             FingerprintAuthenticationDialogFragment.Stage.FINGERPRINT);
-                } else {
+                }
+                else
+                {
                     fragment.setStage(
                             FingerprintAuthenticationDialogFragment.Stage.PASSWORD);
                 }
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
-            } else {
+            }
+            else
+            {
                 // This happens if the lock screen has been disabled or or a fingerprint got
                 // enrolled. Thus show the dialog to authenticate with their password first
                 // and ask the user if they want to authenticate with fingerprints in the
