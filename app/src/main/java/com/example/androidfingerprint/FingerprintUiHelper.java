@@ -1,4 +1,4 @@
-package com.example.android.fingerprintdialog;
+package com.example.androidfingerprint;
 
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.CancellationSignal;

@@ -1,4 +1,4 @@
-package com.example.android.fingerprintdialog;
+package com.example.androidfingerprint;
 
 import android.app.Activity;
 import android.os.Bundle;
