@@ -9,7 +9,7 @@
     <string name="dialog.fingerprint.notRecognized">Fingerprint not recognized. Try again</string>
     <string name="dialog.fingerprint.success">Fingerprint recognized</string>
 
-    <string name="purchase">Purchase</string>
-    <string name="purchase.notInvalidated">Purchase not invalidated</string>
+    <string name="encrypt">Encrypt</string>
+    <string name="decrypt">Decrypt</string>
 
 </resources>

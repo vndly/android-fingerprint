@@ -17,15 +17,14 @@ public class FingerprintEncryption
     private static final String DEFAULT_KEY_NAME = "encryption.key";
 
     private KeyStore keyStore;
-    private Cipher cipher;
 
-    private boolean initCipher(Cipher cipher)
+    private boolean initCipher(Cipher cipher, int mode)
     {
         try
         {
             keyStore.load(null);
             SecretKey key = (SecretKey) keyStore.getKey(DEFAULT_KEY_NAME, null);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            cipher.init(mode, key);
 
             return true;
         }
@@ -65,17 +64,17 @@ public class FingerprintEncryption
         keyGenerator.generateKey();
     }
 
-    public void start(FragmentManager fragmentManager)
+    public void start(FragmentManager fragmentManager, int mode)
     {
         try
         {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
-            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
+            Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
             createKey();
 
             // Set up the crypto object for later. The object will be authenticated by use
             // of the fingerprint.
-            if (initCipher(cipher))
+            if (initCipher(cipher, mode))
             {
                 // Show the fingerprint dialog. The user has the option to use the fingerprint with
                 // crypto, or you can fall back to using a server-side verified password.

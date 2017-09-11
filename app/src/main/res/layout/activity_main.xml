@@ -6,10 +6,16 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button.purchase"
+        android:id="@+id/button.encrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/purchase"/>
+        android:text="@string/encrypt"/>
+
+    <Button
+        android:id="@+id/button.decrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/decrypt"/>
 
     <TextView
         android:id="@+id/encryptedMessage"

@@ -79,7 +79,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     }
 
     @Override
-    public void onAuthenticated()
+    public void onAuthenticated(CryptoObject cryptoObject)
     {
         activity.onSuccess(cryptoObject);
         dismiss();

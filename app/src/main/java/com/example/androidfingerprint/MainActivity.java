@@ -9,6 +9,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import javax.crypto.Cipher;
+
 public class MainActivity extends Activity
 {
     private FingerprintEncryption fingerprintEncryption;
@@ -21,14 +23,25 @@ public class MainActivity extends Activity
 
         fingerprintEncryption = new FingerprintEncryption();
 
-        Button purchaseButton = findViewById(R.id.button_purchase);
-        purchaseButton.setOnClickListener(new OnClickListener()
+        Button encryptButton = findViewById(R.id.button_encrypt);
+        encryptButton.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
                 findViewById(R.id.encryptedMessage).setVisibility(View.GONE);
-                fingerprintEncryption.start(getFragmentManager());
+                fingerprintEncryption.start(getFragmentManager(), Cipher.ENCRYPT_MODE);
+            }
+        });
+
+        Button decryptButton = findViewById(R.id.button_decrypt);
+        decryptButton.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                findViewById(R.id.encryptedMessage).setVisibility(View.GONE);
+                fingerprintEncryption.start(getFragmentManager(), Cipher.DECRYPT_MODE);
             }
         });
     }

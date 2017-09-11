@@ -84,7 +84,7 @@ public class FingerprintUiHelper extends AuthenticationCallback
         errorTextView.setTextColor(errorTextView.getResources().getColor(R.color.success_color, null));
         errorTextView.setText(errorTextView.getResources().getString(R.string.dialog_fingerprint_success));
 
-        callback.onAuthenticated();
+        callback.onAuthenticated(result.getCryptoObject());
     }
 
     private void showError(CharSequence error)
@@ -109,7 +109,7 @@ public class FingerprintUiHelper extends AuthenticationCallback
 
     public interface Callback
     {
-        void onAuthenticated();
+        void onAuthenticated(CryptoObject cryptoObject);
 
         void onError();
     }
