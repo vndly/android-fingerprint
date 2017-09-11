@@ -61,6 +61,8 @@ public class MainActivity extends Activity
             else
             {
                 byte[] decrypted = cipher.doFinal(encrypted);
+                encrypted = null;
+                iv = null;
                 String message = new String(decrypted, "UTF-8");
                 showText(message);
             }
