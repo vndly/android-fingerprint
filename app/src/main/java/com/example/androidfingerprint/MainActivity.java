@@ -85,8 +85,8 @@ public class MainActivity extends Activity
 
         KeyguardManager keyguardManager = getSystemService(KeyguardManager.class);
         FingerprintManager fingerprintManager = getSystemService(FingerprintManager.class);
-        Button purchaseButton = findViewById(R.id.purchase_button);
-        Button purchaseButtonNotInvalidated = findViewById(R.id.purchase_button_not_invalidated);
+        Button purchaseButton = findViewById(R.id.button_purchase);
+        Button purchaseButtonNotInvalidated = findViewById(R.id.button_purchase_notInvalidated);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
@@ -191,9 +191,9 @@ public class MainActivity extends Activity
     {
         if (encrypted != null)
         {
-            TextView v = findViewById(R.id.encrypted_message);
+            TextView v = findViewById(R.id.encryptedMessage);
             v.setVisibility(View.VISIBLE);
-            v.setText(Base64.encodeToString(encrypted, 0 /* flags */));
+            v.setText(Base64.encodeToString(encrypted, 0));
         }
     }
 
@@ -281,7 +281,7 @@ public class MainActivity extends Activity
         @Override
         public void onClick(View view)
         {
-            findViewById(R.id.encrypted_message).setVisibility(View.GONE);
+            findViewById(R.id.encryptedMessage).setVisibility(View.GONE);
 
             // Set up the crypto object for later. The object will be authenticated by use
             // of the fingerprint.

@@ -84,7 +84,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
     @Override
     public void onAuthenticationFailed()
     {
-        showError(mIcon.getResources().getString(R.string.fingerprint_not_recognized));
+        showError(mIcon.getResources().getString(R.string.dialog_fingerprint_notRecognized));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         mErrorTextView.removeCallbacks(mResetErrorTextRunnable);
         mIcon.setImageResource(R.drawable.ic_fingerprint_success);
         mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.success_color, null));
-        mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.fingerprint_success));
+        mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.dialog_fingerprint_success));
         mIcon.postDelayed(new Runnable()
         {
             @Override
@@ -119,7 +119,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         public void run()
         {
             mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.hint_color, null));
-            mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.fingerprint_hint));
+            mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.dialog_fingerprint_hint));
             mIcon.setImageResource(R.drawable.ic_fingerprint);
         }
     };

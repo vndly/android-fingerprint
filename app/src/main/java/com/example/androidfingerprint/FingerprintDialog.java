@@ -15,7 +15,6 @@ import android.widget.Toast;
 public class FingerprintDialog extends DialogFragment implements FingerprintUiHelper.Callback
 {
     private Button mCancelButton;
-    private View mFingerprintContent;
 
     private Stage mStage = Stage.FINGERPRINT;
 
@@ -36,9 +35,9 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        getDialog().setTitle(getString(R.string.sign_in));
+        getDialog().setTitle(getString(R.string.dialog_signIn));
         View v = inflater.inflate(R.layout.fingerprint_dialog, container, false);
-        mCancelButton = v.findViewById(R.id.cancel_button);
+        mCancelButton = v.findViewById(R.id.button_cancel);
         mCancelButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -48,7 +47,6 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
             }
         });
 
-        mFingerprintContent = v.findViewById(R.id.fingerprint_container);
         mFingerprintUiHelper = new FingerprintUiHelper(
                 mActivity.getSystemService(FingerprintManager.class),
                 (ImageView) v.findViewById(R.id.fingerprint_icon),
@@ -107,8 +105,6 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
         switch (mStage)
         {
             case FINGERPRINT:
-                mCancelButton.setText(R.string.cancel);
-                mFingerprintContent.setVisibility(View.VISIBLE);
                 break;
             case NEW_FINGERPRINT_ENROLLED:
                 // Intentional fall through

@@ -2,14 +2,14 @@
 <resources>
     <string name="application_name">Fingerprint</string>
 
-    <string name="cancel">Cancel</string>
-    <string name="sign_in">Sign in</string>
-    <string name="fingerprint_description">Confirm fingerprint to continue</string>
-    <string name="fingerprint_hint">Touch sensor</string>
-    <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
-    <string name="fingerprint_success">Fingerprint recognized</string>
+    <string name="dialog.cancel">Cancel</string>
+    <string name="dialog.signIn">Sign in</string>
+    <string name="dialog.fingerprint.description">Confirm fingerprint to continue</string>
+    <string name="dialog.fingerprint.hint">Touch sensor</string>
+    <string name="dialog.fingerprint.notRecognized">Fingerprint not recognized. Try again</string>
+    <string name="dialog.fingerprint.success">Fingerprint recognized</string>
 
     <string name="purchase">Purchase</string>
-    <string name="purchase_not_invalidated">Purchase not invalidated</string>
+    <string name="purchase.notInvalidated">Purchase not invalidated</string>
 
 </resources>
