@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.crypto.Cipher;
 
@@ -48,10 +49,19 @@ public class MainActivity extends Activity
 
     public void onSuccess(CryptoObject cryptoObject)
     {
-        byte[] encrypted = fingerprintEncryption.encrypt(cryptoObject, "hello");
+        try
+        {
+            Cipher cipher = cryptoObject.getCipher();
+            byte[] encrypted = cipher.doFinal("hello".getBytes());
 
-        TextView textView = findViewById(R.id.encryptedMessage);
-        textView.setVisibility(View.VISIBLE);
-        textView.setText(Base64.encodeToString(encrypted, 0));
+
+            TextView textView = findViewById(R.id.encryptedMessage);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(Base64.encodeToString(encrypted, 0));
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
