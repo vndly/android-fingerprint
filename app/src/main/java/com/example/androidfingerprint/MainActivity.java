@@ -2,7 +2,6 @@ package com.example.androidfingerprint;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -14,8 +13,6 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,9 +35,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
-/**
- * Main entry point for the sample, showing a backpack and "Purchase" button.
- */
 public class MainActivity extends Activity
 {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -283,29 +277,6 @@ public class MainActivity extends Activity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings)
-        {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     private class PurchaseButtonClickListener implements View.OnClickListener
     {
         Cipher mCipher;
@@ -330,8 +301,8 @@ public class MainActivity extends Activity
 
                 // Show the fingerprint dialog. The user has the option to use the fingerprint with
                 // crypto, or you can fall back to using a server-side verified password.
-                FingerprintAuthenticationDialogFragment fragment
-                        = new FingerprintAuthenticationDialogFragment();
+                FingerprintDialog fragment
+                        = new FingerprintDialog();
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
                 boolean useFingerprintPreference = mSharedPreferences
                         .getBoolean(getString(R.string.use_fingerprint_to_authenticate_key),
@@ -339,12 +310,12 @@ public class MainActivity extends Activity
                 if (useFingerprintPreference)
                 {
                     fragment.setStage(
-                            FingerprintAuthenticationDialogFragment.Stage.FINGERPRINT);
+                            FingerprintDialog.Stage.FINGERPRINT);
                 }
                 else
                 {
                     fragment.setStage(
-                            FingerprintAuthenticationDialogFragment.Stage.PASSWORD);
+                            FingerprintDialog.Stage.PASSWORD);
                 }
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
@@ -354,11 +325,11 @@ public class MainActivity extends Activity
                 // enrolled. Thus show the dialog to authenticate with their password first
                 // and ask the user if they want to authenticate with fingerprints in the
                 // future
-                FingerprintAuthenticationDialogFragment fragment
-                        = new FingerprintAuthenticationDialogFragment();
+                FingerprintDialog fragment
+                        = new FingerprintDialog();
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
                 fragment.setStage(
-                        FingerprintAuthenticationDialogFragment.Stage.NEW_FINGERPRINT_ENROLLED);
+                        FingerprintDialog.Stage.NEW_FINGERPRINT_ENROLLED);
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
         }

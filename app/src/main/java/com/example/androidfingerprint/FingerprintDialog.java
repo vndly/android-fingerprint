@@ -22,7 +22,7 @@ import android.widget.TextView;
  * A dialog which uses fingerprint APIs to authenticate the user, and falls back to password
  * authentication if fingerprint is not available.
  */
-public class FingerprintAuthenticationDialogFragment extends DialogFragment implements TextView.OnEditorActionListener, FingerprintUiHelper.Callback
+public class FingerprintDialog extends DialogFragment implements TextView.OnEditorActionListener, FingerprintUiHelper.Callback
 {
     private Button mCancelButton;
     private Button mSecondDialogButton;
