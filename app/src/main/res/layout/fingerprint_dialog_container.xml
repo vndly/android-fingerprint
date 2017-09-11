@@ -9,11 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/fingerprint_dialog_content"/>
-
         <include
-            layout="@layout/fingerprint_dialog_backup"
-            android:visibility="gone"/>
+            layout="@layout/fingerprint_dialog_content"/>
 
     </FrameLayout>
 
@@ -47,6 +44,7 @@
             style="?android:attr/buttonBarPositiveButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </LinearLayout>

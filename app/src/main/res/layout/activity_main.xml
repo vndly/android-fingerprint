@@ -9,43 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/card"
-            android:elevation="4dp"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/item_title"
-                android:textAppearance="@android:style/TextAppearance.Material.Headline"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/item_price"
-                android:textAppearance="@android:style/TextAppearance.Material.Body2"
-                android:textColor="?android:attr/colorAccent"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/item_description"
-                android:textAppearance="@android:style/TextAppearance.Material.Body1"
-                android:textColor="?android:attr/textColorSecondary"/>
-
-        </LinearLayout>
-
         <Button
             android:id="@+id/purchase_button"
             style="@android:style/Widget.Material.Button.Colored"
@@ -67,15 +30,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/purchase_not_invalidated"
             android:textColor="?android:attr/textColorPrimaryInverse"/>
-
-        <TextView
-            android:id="@+id/purchase_button_not_invalidated_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:gravity="end"
-            android:text="@string/purchase_button_not_invalidated_description"
-            android:textAlignment="gravity"/>
 
         <TextView
             android:id="@+id/confirmation_message"
@@ -100,5 +54,7 @@
             android:textAppearance="@android:style/TextAppearance.Material.Body2"
             android:textColor="?android:attr/colorAccent"
             android:visibility="gone"/>
+
     </LinearLayout>
+
 </ScrollView>
