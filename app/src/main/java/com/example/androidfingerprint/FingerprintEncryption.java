@@ -1,7 +1,9 @@
 package com.example.androidfingerprint;
 
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.hardware.fingerprint.FingerprintManager.CryptoObject;
+import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 
@@ -11,6 +13,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+@TargetApi(Build.VERSION_CODES.M)
 public class FingerprintEncryption
 {
     private static final String KEY_ALIAS = "encryption.key";
@@ -28,6 +31,8 @@ public class FingerprintEncryption
         }
         catch (Exception e)
         {
+            e.printStackTrace();
+
             return false;
         }
     }
@@ -58,12 +63,11 @@ public class FingerprintEncryption
 
             Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
-            // Set up the crypto object for later. The object will be authenticated by use
-            // of the fingerprint.
+            // Set up the crypto object for later. The object will be authenticated by use of the fingerprint
             if (initCipher(keyStore, cipher, mode))
             {
-                // Show the fingerprint dialog. The user has the option to use the fingerprint with
-                // crypto, or you can fall back to using a server-side verified password.
+                // Show the fingerprint dialog. The user has the option to use the fingerprint
+                // with crypto, or you can fall back to using a server-side verified password
                 FingerprintDialog fragment = new FingerprintDialog();
                 fragment.setCryptoObject(new CryptoObject(cipher));
                 fragment.show(fragmentManager, null);
@@ -71,7 +75,7 @@ public class FingerprintEncryption
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

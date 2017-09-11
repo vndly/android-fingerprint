@@ -1,9 +1,11 @@
 package com.example.androidfingerprint;
 
+import android.annotation.TargetApi;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintManager.CryptoObject;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@TargetApi(Build.VERSION_CODES.M)
 public class FingerprintDialog extends DialogFragment implements FingerprintUiHelper.Callback
 {
     private CryptoObject cryptoObject;
@@ -81,7 +84,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     @Override
     public void onAuthenticated(CryptoObject cryptoObject)
     {
-        activity.onSuccess(cryptoObject);
+        activity.onSuccess(cryptoObject.getCipher());
         dismiss();
     }
 

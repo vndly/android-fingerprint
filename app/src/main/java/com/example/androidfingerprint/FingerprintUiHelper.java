@@ -1,13 +1,16 @@
 package com.example.androidfingerprint;
 
+import android.annotation.TargetApi;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintManager.AuthenticationCallback;
 import android.hardware.fingerprint.FingerprintManager.AuthenticationResult;
 import android.hardware.fingerprint.FingerprintManager.CryptoObject;
+import android.os.Build;
 import android.os.CancellationSignal;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+@TargetApi(Build.VERSION_CODES.M)
 public class FingerprintUiHelper extends AuthenticationCallback
 {
     private static final long ERROR_TIMEOUT_MILLIS = 1600;

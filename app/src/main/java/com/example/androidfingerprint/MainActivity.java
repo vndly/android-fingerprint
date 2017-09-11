@@ -1,14 +1,12 @@
 package com.example.androidfingerprint;
 
 import android.app.Activity;
-import android.hardware.fingerprint.FingerprintManager.CryptoObject;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import javax.crypto.Cipher;
 
@@ -47,21 +45,34 @@ public class MainActivity extends Activity
         });
     }
 
-    public void onSuccess(CryptoObject cryptoObject)
+    byte[] encrypted = null;
+
+    public void onSuccess(Cipher cipher)
     {
         try
         {
-            Cipher cipher = cryptoObject.getCipher();
-            byte[] encrypted = cipher.doFinal("hello".getBytes());
-
-
-            TextView textView = findViewById(R.id.encryptedMessage);
-            textView.setVisibility(View.VISIBLE);
-            textView.setText(Base64.encodeToString(encrypted, 0));
+            if (encrypted == null)
+            {
+                encrypted = cipher.doFinal("hello".getBytes());
+                showText(Base64.encodeToString(encrypted, 0));
+            }
+            else
+            {
+                byte[] decrypted = cipher.doFinal(encrypted);
+                String message = new String(decrypted, "UTF-8");
+                showText(message);
+            }
         }
         catch (Exception e)
         {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
+    }
+
+    private void showText(String text)
+    {
+        TextView textView = findViewById(R.id.encryptedMessage);
+        textView.setVisibility(View.VISIBLE);
+        textView.setText(text);
     }
 }
