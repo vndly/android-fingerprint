@@ -11,56 +11,54 @@ import android.widget.TextView;
 public class FingerprintUiHelper extends AuthenticationCallback
 {
     private static final long ERROR_TIMEOUT_MILLIS = 1600;
-    private static final long SUCCESS_DELAY_MILLIS = 1300;
 
-    private final FingerprintManager mFingerprintManager;
-    private final ImageView mIcon;
-    private final TextView mErrorTextView;
-    private final Callback mCallback;
-    private CancellationSignal mCancellationSignal;
-
-    private boolean mSelfCancelled;
+    private final FingerprintManager fingerprintManager;
+    private final ImageView icon;
+    private final TextView errorTextView;
+    private final Callback callback;
+    private CancellationSignal cancellationSignal;
+    private boolean selfCancelled;
 
     public FingerprintUiHelper(FingerprintManager fingerprintManager, ImageView icon, TextView errorTextView, Callback callback)
     {
-        mFingerprintManager = fingerprintManager;
-        mIcon = icon;
-        mErrorTextView = errorTextView;
-        mCallback = callback;
+        this.fingerprintManager = fingerprintManager;
+        this.icon = icon;
+        this.errorTextView = errorTextView;
+        this.callback = callback;
     }
 
+    @SuppressWarnings("MissingPermission")
     public void startListening(CryptoObject cryptoObject)
     {
-        mCancellationSignal = new CancellationSignal();
-        mSelfCancelled = false;
-        // The line below prevents the false positive inspection from Android Studio
-        // noinspection ResourceType
-        mFingerprintManager.authenticate(cryptoObject, mCancellationSignal, 0 /* flags */, this, null);
-        mIcon.setImageResource(R.drawable.ic_fingerprint);
+        cancellationSignal = new CancellationSignal();
+        selfCancelled = false;
+        fingerprintManager.authenticate(cryptoObject, cancellationSignal, 0, this, null);
+        icon.setImageResource(R.drawable.ic_fingerprint);
     }
 
     public void stopListening()
     {
-        if (mCancellationSignal != null)
+        if (cancellationSignal != null)
         {
-            mSelfCancelled = true;
-            mCancellationSignal.cancel();
-            mCancellationSignal = null;
+            selfCancelled = true;
+            cancellationSignal.cancel();
+            cancellationSignal = null;
         }
     }
 
     @Override
     public void onAuthenticationError(int errMsgId, CharSequence errString)
     {
-        if (!mSelfCancelled)
+        if (!selfCancelled)
         {
             showError(errString);
-            mIcon.postDelayed(new Runnable()
+
+            icon.postDelayed(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    mCallback.onError();
+                    callback.onError();
                 }
             }, ERROR_TIMEOUT_MILLIS);
         }
@@ -75,43 +73,37 @@ public class FingerprintUiHelper extends AuthenticationCallback
     @Override
     public void onAuthenticationFailed()
     {
-        showError(mIcon.getResources().getString(R.string.dialog_fingerprint_notRecognized));
+        showError(icon.getResources().getString(R.string.dialog_fingerprint_notRecognized));
     }
 
     @Override
     public void onAuthenticationSucceeded(AuthenticationResult result)
     {
-        mErrorTextView.removeCallbacks(mResetErrorTextRunnable);
-        mIcon.setImageResource(R.drawable.ic_fingerprint_success);
-        mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.success_color, null));
-        mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.dialog_fingerprint_success));
-        mIcon.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mCallback.onAuthenticated();
-            }
-        }, SUCCESS_DELAY_MILLIS);
+        errorTextView.removeCallbacks(resetErrorTextRunnable);
+        icon.setImageResource(R.drawable.ic_fingerprint_success);
+        errorTextView.setTextColor(errorTextView.getResources().getColor(R.color.success_color, null));
+        errorTextView.setText(errorTextView.getResources().getString(R.string.dialog_fingerprint_success));
+
+        callback.onAuthenticated();
     }
 
     private void showError(CharSequence error)
     {
-        mIcon.setImageResource(R.drawable.ic_fingerprint_error);
-        mErrorTextView.setText(error);
-        mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.warning_color, null));
-        mErrorTextView.removeCallbacks(mResetErrorTextRunnable);
-        mErrorTextView.postDelayed(mResetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
+        icon.setImageResource(R.drawable.ic_fingerprint_error);
+        errorTextView.setText(error);
+        errorTextView.setTextColor(errorTextView.getResources().getColor(R.color.warning_color, null));
+        errorTextView.removeCallbacks(resetErrorTextRunnable);
+        errorTextView.postDelayed(resetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
     }
 
-    private Runnable mResetErrorTextRunnable = new Runnable()
+    private Runnable resetErrorTextRunnable = new Runnable()
     {
         @Override
         public void run()
         {
-            mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.hint_color, null));
-            mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.dialog_fingerprint_hint));
-            mIcon.setImageResource(R.drawable.ic_fingerprint);
+            errorTextView.setTextColor(errorTextView.getResources().getColor(R.color.hint_color, null));
+            errorTextView.setText(errorTextView.getResources().getString(R.string.dialog_fingerprint_hint));
+            icon.setImageResource(R.drawable.ic_fingerprint);
         }
     };
 
