@@ -292,7 +292,6 @@ public class MainActivity extends Activity
                 // crypto, or you can fall back to using a server-side verified password.
                 FingerprintDialog fragment = new FingerprintDialog();
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
-                fragment.setStage(FingerprintDialog.Stage.FINGERPRINT);
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
             else
@@ -304,8 +303,6 @@ public class MainActivity extends Activity
                 FingerprintDialog fragment
                         = new FingerprintDialog();
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
-                fragment.setStage(
-                        FingerprintDialog.Stage.NEW_FINGERPRINT_ENROLLED);
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
         }

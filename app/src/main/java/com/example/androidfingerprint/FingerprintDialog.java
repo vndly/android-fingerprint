@@ -7,17 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class FingerprintDialog extends DialogFragment implements FingerprintUiHelper.Callback
 {
-    private Button mCancelButton;
-
-    private Stage mStage = Stage.FINGERPRINT;
-
     private FingerprintManager.CryptoObject mCryptoObject;
     private FingerprintUiHelper mFingerprintUiHelper;
     private MainActivity mActivity;
@@ -37,7 +32,8 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     {
         getDialog().setTitle(getString(R.string.dialog_signIn));
         View v = inflater.inflate(R.layout.fingerprint_dialog, container, false);
-        mCancelButton = v.findViewById(R.id.button_cancel);
+
+       View  mCancelButton = v.findViewById(R.id.button_cancel);
         mCancelButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -51,7 +47,6 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
                 mActivity.getSystemService(FingerprintManager.class),
                 (ImageView) v.findViewById(R.id.fingerprint_icon),
                 (TextView) v.findViewById(R.id.fingerprint_status), this);
-        updateStage();
 
         // If fingerprint authentication is not available, switch immediately to the backup (password) screen.
         if (!mFingerprintUiHelper.isFingerprintAuthAvailable())
@@ -67,15 +62,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     {
         super.onResume();
 
-        if (mStage == Stage.FINGERPRINT)
-        {
             mFingerprintUiHelper.startListening(mCryptoObject);
-        }
-    }
-
-    public void setStage(Stage stage)
-    {
-        mStage = stage;
     }
 
     @Override
@@ -98,17 +85,6 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     public void setCryptoObject(FingerprintManager.CryptoObject cryptoObject)
     {
         mCryptoObject = cryptoObject;
-    }
-
-    private void updateStage()
-    {
-        switch (mStage)
-        {
-            case FINGERPRINT:
-                break;
-            case NEW_FINGERPRINT_ENROLLED:
-                // Intentional fall through
-        }
     }
 
     @Override
