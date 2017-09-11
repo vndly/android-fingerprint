@@ -2,11 +2,9 @@ package com.example.androidfingerprint;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
-import android.content.SharedPreferences;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
@@ -37,8 +35,6 @@ import javax.crypto.SecretKey;
 
 public class MainActivity extends Activity
 {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private static final String DIALOG_FRAGMENT_TAG = "myFragment";
     private static final String SECRET_MESSAGE = "Very secret message";
     private static final String KEY_NAME_NOT_INVALIDATED = "key_not_invalidated";
@@ -46,7 +42,6 @@ public class MainActivity extends Activity
 
     private KeyStore mKeyStore;
     private KeyGenerator mKeyGenerator;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,12 +82,11 @@ public class MainActivity extends Activity
         {
             throw new RuntimeException("Failed to get an instance of Cipher", e);
         }
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         KeyguardManager keyguardManager = getSystemService(KeyguardManager.class);
         FingerprintManager fingerprintManager = getSystemService(FingerprintManager.class);
-        Button purchaseButton = (Button) findViewById(R.id.purchase_button);
-        Button purchaseButtonNotInvalidated = (Button) findViewById(R.id.purchase_button_not_invalidated);
+        Button purchaseButton = findViewById(R.id.purchase_button);
+        Button purchaseButtonNotInvalidated = findViewById(R.id.purchase_button_not_invalidated);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
@@ -195,10 +189,9 @@ public class MainActivity extends Activity
     // Show confirmation, if fingerprint was used show crypto information.
     private void showConfirmation(byte[] encrypted)
     {
-        findViewById(R.id.confirmation_message).setVisibility(View.VISIBLE);
         if (encrypted != null)
         {
-            TextView v = (TextView) findViewById(R.id.encrypted_message);
+            TextView v = findViewById(R.id.encrypted_message);
             v.setVisibility(View.VISIBLE);
             v.setText(Base64.encodeToString(encrypted, 0 /* flags */));
         }
@@ -217,9 +210,8 @@ public class MainActivity extends Activity
         }
         catch (BadPaddingException | IllegalBlockSizeException e)
         {
-            Toast.makeText(this, "Failed to encrypt the data with the generated key. "
-                    + "Retry the purchase", Toast.LENGTH_LONG).show();
-            Log.e(TAG, "Failed to encrypt the data with the generated key." + e.getMessage());
+            Toast.makeText(this, "Failed to encrypt the data with the generated key. Retry the purchase", Toast.LENGTH_LONG).show();
+            Log.e(getClass().getName(), "Failed to encrypt the data with the generated key." + e.getMessage());
         }
     }
 
@@ -289,7 +281,6 @@ public class MainActivity extends Activity
         @Override
         public void onClick(View view)
         {
-            findViewById(R.id.confirmation_message).setVisibility(View.GONE);
             findViewById(R.id.encrypted_message).setVisibility(View.GONE);
 
             // Set up the crypto object for later. The object will be authenticated by use
@@ -301,11 +292,7 @@ public class MainActivity extends Activity
                 // crypto, or you can fall back to using a server-side verified password.
                 FingerprintDialog fragment = new FingerprintDialog();
                 fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
-                boolean useFingerprintPreference = mSharedPreferences.getBoolean(getString(R.string.use_fingerprint_to_authenticate_key), true);
-                if (useFingerprintPreference)
-                {
-                    fragment.setStage(FingerprintDialog.Stage.FINGERPRINT);
-                }
+                fragment.setStage(FingerprintDialog.Stage.FINGERPRINT);
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
             else
