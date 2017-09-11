@@ -35,10 +35,9 @@ import javax.crypto.SecretKey;
 
 public class MainActivity extends Activity
 {
-    private static final String DIALOG_FRAGMENT_TAG = "myFragment";
     private static final String SECRET_MESSAGE = "Very secret message";
     private static final String KEY_NAME_NOT_INVALIDATED = "key_not_invalidated";
-    static final String DEFAULT_KEY_NAME = "default_key";
+    private static final String DEFAULT_KEY_NAME = "default_key";
 
     private KeyStore mKeyStore;
     private KeyGenerator mKeyGenerator;
@@ -251,12 +250,12 @@ public class MainActivity extends Activity
 
     private class PurchaseButtonClickListener implements View.OnClickListener
     {
-        Cipher mCipher;
+        Cipher cipher;
         String mKeyName;
 
         public PurchaseButtonClickListener(Cipher cipher, String keyName)
         {
-            mCipher = cipher;
+            this.cipher = cipher;
             mKeyName = keyName;
         }
 
@@ -267,25 +266,23 @@ public class MainActivity extends Activity
 
             // Set up the crypto object for later. The object will be authenticated by use
             // of the fingerprint.
-            if (initCipher(mCipher, mKeyName))
+            if (initCipher(cipher, mKeyName))
             {
-
                 // Show the fingerprint dialog. The user has the option to use the fingerprint with
                 // crypto, or you can fall back to using a server-side verified password.
                 FingerprintDialog fragment = new FingerprintDialog();
-                fragment.setCryptoObject(new CryptoObject(mCipher));
-                fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+                fragment.setCryptoObject(new CryptoObject(cipher));
+                fragment.show(getFragmentManager(), null);
             }
             else
             {
-                // This happens if the lock screen has been disabled or or a fingerprint got
+                // This happens if the lock screen has been disabled or a fingerprint got
                 // enrolled. Thus show the dialog to authenticate with their password first
                 // and ask the user if they want to authenticate with fingerprints in the
                 // future
-                FingerprintDialog fragment
-                        = new FingerprintDialog();
-                fragment.setCryptoObject(new CryptoObject(mCipher));
-                fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
+                FingerprintDialog fragment = new FingerprintDialog();
+                fragment.setCryptoObject(new CryptoObject(cipher));
+                fragment.show(getFragmentManager(), null);
             }
         }
     }

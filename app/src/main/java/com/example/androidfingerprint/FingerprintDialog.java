@@ -30,7 +30,7 @@ public class FingerprintDialog extends DialogFragment implements FingerprintUiHe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         getDialog().setTitle(getString(R.string.dialog_signIn));
-        View view = inflater.inflate(R.layout.fingerprint_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_fingerprint, container, false);
 
         view.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener()
         {
