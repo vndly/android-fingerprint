@@ -45,7 +45,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         // The line below prevents the false positive inspection from Android Studio
         // noinspection ResourceType
         mFingerprintManager.authenticate(cryptoObject, mCancellationSignal, 0 /* flags */, this, null);
-        mIcon.setImageResource(R.drawable.ic_fp_40px);
+        mIcon.setImageResource(R.drawable.ic_fingerprint);
     }
 
     public void stopListening()
@@ -120,7 +120,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         {
             mErrorTextView.setTextColor(mErrorTextView.getResources().getColor(R.color.hint_color, null));
             mErrorTextView.setText(mErrorTextView.getResources().getString(R.string.fingerprint_hint));
-            mIcon.setImageResource(R.drawable.ic_fp_40px);
+            mIcon.setImageResource(R.drawable.ic_fingerprint);
         }
     };
 
