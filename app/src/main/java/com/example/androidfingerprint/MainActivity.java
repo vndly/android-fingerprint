@@ -29,7 +29,7 @@ public class MainActivity extends Activity
             public void onClick(View view)
             {
                 findViewById(R.id.encryptedMessage).setVisibility(View.GONE);
-                fingerprintEncryption.start(getFragmentManager(), Cipher.ENCRYPT_MODE);
+                fingerprintEncryption.start(getFragmentManager(), Cipher.ENCRYPT_MODE, iv);
             }
         });
 
@@ -40,12 +40,13 @@ public class MainActivity extends Activity
             public void onClick(View view)
             {
                 findViewById(R.id.encryptedMessage).setVisibility(View.GONE);
-                fingerprintEncryption.start(getFragmentManager(), Cipher.DECRYPT_MODE);
+                fingerprintEncryption.start(getFragmentManager(), Cipher.DECRYPT_MODE, iv);
             }
         });
     }
 
     byte[] encrypted = null;
+    byte[] iv = null;
 
     public void onSuccess(Cipher cipher)
     {
@@ -54,6 +55,7 @@ public class MainActivity extends Activity
             if (encrypted == null)
             {
                 encrypted = cipher.doFinal("hello".getBytes());
+                iv = cipher.getIV();
                 showText(Base64.encodeToString(encrypted, 0));
             }
             else

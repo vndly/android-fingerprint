@@ -12,20 +12,29 @@ import java.security.KeyStore;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class FingerprintEncryption
 {
     private static final String KEY_ALIAS = "encryption.key";
 
-    private boolean initCipher(KeyStore keyStore, Cipher cipher, int mode)
+    private boolean initCipher(KeyStore keyStore, Cipher cipher, int mode, byte[] iv)
     {
         try
         {
             keyStore.load(null);
 
             SecretKey key = (SecretKey) keyStore.getKey(KEY_ALIAS, null);
-            cipher.init(mode, key);
+
+            if (iv != null)
+            {
+                cipher.init(mode, key, new IvParameterSpec(iv));
+            }
+            else
+            {
+                cipher.init(mode, key);
+            }
 
             return true;
         }
@@ -54,7 +63,7 @@ public class FingerprintEncryption
         }
     }
 
-    public void start(FragmentManager fragmentManager, int mode)
+    public void start(FragmentManager fragmentManager, int mode, byte[] iv)
     {
         try
         {
@@ -64,7 +73,7 @@ public class FingerprintEncryption
             Cipher cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
 
             // Set up the crypto object for later. The object will be authenticated by use of the fingerprint
-            if (initCipher(keyStore, cipher, mode))
+            if (initCipher(keyStore, cipher, mode, iv))
             {
                 // Show the fingerprint dialog. The user has the option to use the fingerprint
                 // with crypto, or you can fall back to using a server-side verified password
