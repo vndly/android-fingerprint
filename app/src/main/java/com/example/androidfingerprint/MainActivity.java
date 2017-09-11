@@ -3,12 +3,12 @@ package com.example.androidfingerprint;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.fingerprint.FingerprintManager.CryptoObject;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -163,27 +163,9 @@ public class MainActivity extends Activity
         }
     }
 
-    /**
-     * Proceed the purchase operation
-     *
-     * @param withFingerprint {@code true} if the purchase was made by using a fingerprint
-     * @param cryptoObject    the Crypto object
-     */
-    public void onPurchased(boolean withFingerprint,
-                            @Nullable FingerprintManager.CryptoObject cryptoObject)
+    public void onPurchased(CryptoObject cryptoObject)
     {
-        if (withFingerprint)
-        {
-            // If the user has authenticated with fingerprint, verify that using cryptography and
-            // then show the confirmation message.
-            assert cryptoObject != null;
-            tryEncrypt(cryptoObject.getCipher());
-        }
-        else
-        {
-            // Authentication happened with backup password. Just show the confirmation message.
-            showConfirmation(null);
-        }
+        tryEncrypt(cryptoObject.getCipher());
     }
 
     // Show confirmation, if fingerprint was used show crypto information.
@@ -191,9 +173,9 @@ public class MainActivity extends Activity
     {
         if (encrypted != null)
         {
-            TextView v = findViewById(R.id.encryptedMessage);
-            v.setVisibility(View.VISIBLE);
-            v.setText(Base64.encodeToString(encrypted, 0));
+            TextView textView = findViewById(R.id.encryptedMessage);
+            textView.setVisibility(View.VISIBLE);
+            textView.setText(Base64.encodeToString(encrypted, 0));
         }
     }
 
@@ -291,7 +273,7 @@ public class MainActivity extends Activity
                 // Show the fingerprint dialog. The user has the option to use the fingerprint with
                 // crypto, or you can fall back to using a server-side verified password.
                 FingerprintDialog fragment = new FingerprintDialog();
-                fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
+                fragment.setCryptoObject(new CryptoObject(mCipher));
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
             else
@@ -302,7 +284,7 @@ public class MainActivity extends Activity
                 // future
                 FingerprintDialog fragment
                         = new FingerprintDialog();
-                fragment.setCryptoObject(new FingerprintManager.CryptoObject(mCipher));
+                fragment.setCryptoObject(new CryptoObject(mCipher));
                 fragment.show(getFragmentManager(), DIALOG_FRAGMENT_TAG);
             }
         }

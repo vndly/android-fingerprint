@@ -1,11 +1,14 @@
 package com.example.androidfingerprint;
 
 import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.fingerprint.FingerprintManager.AuthenticationCallback;
+import android.hardware.fingerprint.FingerprintManager.AuthenticationResult;
+import android.hardware.fingerprint.FingerprintManager.CryptoObject;
 import android.os.CancellationSignal;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallback
+public class FingerprintUiHelper extends AuthenticationCallback
 {
     private static final long ERROR_TIMEOUT_MILLIS = 1600;
     private static final long SUCCESS_DELAY_MILLIS = 1300;
@@ -26,20 +29,8 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
         mCallback = callback;
     }
 
-    public boolean isFingerprintAuthAvailable()
+    public void startListening(CryptoObject cryptoObject)
     {
-        // The line below prevents the false positive inspection from Android Studio
-        // noinspection ResourceType
-        return mFingerprintManager.isHardwareDetected() && mFingerprintManager.hasEnrolledFingerprints();
-    }
-
-    public void startListening(FingerprintManager.CryptoObject cryptoObject)
-    {
-        if (!isFingerprintAuthAvailable())
-        {
-            return;
-        }
-
         mCancellationSignal = new CancellationSignal();
         mSelfCancelled = false;
         // The line below prevents the false positive inspection from Android Studio
@@ -88,7 +79,7 @@ public class FingerprintUiHelper extends FingerprintManager.AuthenticationCallba
     }
 
     @Override
-    public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result)
+    public void onAuthenticationSucceeded(AuthenticationResult result)
     {
         mErrorTextView.removeCallbacks(mResetErrorTextRunnable);
         mIcon.setImageResource(R.drawable.ic_fingerprint_success);
